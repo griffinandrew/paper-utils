@@ -8,9 +8,16 @@
 use smallvec::SmallVec;
 use crate::sheet::Sheet;
 
+#[cfg(not(feature = "allocator_api"))]
 pub struct SheetBuilder {
 	data: SmallVec<[u8; 3]>,
 }
+
+#[cfg(feature = "allocator_api")]
+pub struct SheetBuilder {
+	data: SmallVec<[u8; 3]>,
+}
+
 
 impl SheetBuilder {
 	pub fn new() -> Self {
@@ -68,6 +75,12 @@ impl SheetBuilder {
 		self.write_buf(value.as_ref().as_bytes())
 	}
 
+	#[cfg(not(feature = "allocator_api"))]
+	pub fn into_sheet(self) -> Sheet {
+		Sheet::new(self.data.into_boxed_slice())
+	}
+
+	#[cfg(feature = "allocator_api")]
 	pub fn into_sheet(self) -> Sheet {
 		Sheet::new(self.data.into_boxed_slice())
 	}

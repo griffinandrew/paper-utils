@@ -82,6 +82,7 @@ impl<'a> StreamReader<'a> {
 		let size = self.read_u32()? as usize;
 		read_buf(self.stream, size)
 	}
+	
 
 	pub fn read_string(&mut self) -> Result<String, StreamError> {
 		let size = self.read_u32()? as usize;
