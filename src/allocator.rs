@@ -15,7 +15,7 @@ mod allocator_bindings {
 }
 
 /// Hybrid allocator: first DRAM up to a limit, then PMEM
-pub struct HybridBuffer;
+pub struct HybridGlobal;
 
 static INIT: Once = Once::new();
 static DRAM_ALLOCATED: AtomicUsize = AtomicUsize::new(0);
@@ -30,7 +30,7 @@ static ALL_MEM_ALLOCATED: AtomicUsize = AtomicUsize::new(0);
 
 
 //#[cfg(feature = "allocator_api")]
-unsafe impl GlobalAlloc for HybridBuffer {
+unsafe impl GlobalAlloc for HybridGlobal {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
 
         if DRAM_LIMIT == 0 {
@@ -172,7 +172,7 @@ unsafe impl GlobalAlloc for HybridBuffer {
 }
 
 //#[cfg(feature = "allocator_api")]
-impl HybridBuffer {
+impl HybridGlobal {
     /// Set the DRAM limit in bytes
     pub fn set_dram_limit(limit: usize) {
         unsafe { DRAM_LIMIT = limit; }
@@ -189,10 +189,10 @@ impl HybridBuffer {
 
 
 //#[cfg(feature = "allocator_api")]
-unsafe impl Allocator for HybridBuffer {
+unsafe impl Allocator for HybridGlobal {
     fn allocate(&self, layout: Layout) -> Result<NonNull<[u8]>, AllocError> {
         unsafe {
-            HybridBuffer::alloc(self, layout)
+            HybridGlobal::alloc(self, layout)
                 .as_mut()
                 .map(|ptr| NonNull::slice_from_raw_parts(NonNull::new_unchecked(ptr), layout.size()))
                 .ok_or(AllocError)
@@ -200,7 +200,7 @@ unsafe impl Allocator for HybridBuffer {
     }
 
     unsafe fn deallocate(&self, ptr: NonNull<u8>, layout: Layout) {
-        HybridBuffer::dealloc(self, ptr.as_ptr(), layout);
+        HybridGlobal::dealloc(self, ptr.as_ptr(), layout);
     }
 }
 

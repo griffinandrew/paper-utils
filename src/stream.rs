@@ -19,14 +19,14 @@ use std::mem::MaybeUninit;
 
 
 //#[cfg(feature = "allocator_api")]
-use crate::allocator::HybridBuffer;
+use crate::allocator::HybridGlobal;
 
 //#[cfg(feature = "allocator_api")]
 use std::alloc::Allocator;
 
 
 //need to import allocator....
-pub type BufferPMEM = Box<[u8], HybridBuffer>;
+pub type BufferPMEM = Box<[u8], HybridGlobal>;
 
 
 pub type Buffer = Box<[u8]>;
@@ -45,7 +45,7 @@ pub fn read_buf(stream: &mut TcpStream, buf_size: usize) -> Result<Buffer, Strea
 pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPMEM, StreamError> {
 	//let mut buf = vec![0u8; buf_size].into_boxed_slice();
 
-	let mut buf: Vec<u8, HybridBuffer> = Vec::with_capacity_in(buf_size, HybridBuffer);
+	let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
     buf.resize(buf_size, 0); // initialize with zeros
 	
 	//i think this moves it back to a dram allocated buffer....
