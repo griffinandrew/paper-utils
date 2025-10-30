@@ -11,7 +11,7 @@ use std::{
 };
 
 use byteorder::{LittleEndian, ReadBytesExt};
-use crate::stream::{Buffer, StreamError, read_buf, read_stack_buf};
+use crate::stream::{Buffer, StreamError, read_buf, read_stack_buf, BufferPMEM, read_buf_pmem};
 
 pub const TRUE_INDICATOR: u8 = 33;
 pub const FALSE_INDICATOR: u8 = 63;
@@ -82,7 +82,13 @@ impl<'a> StreamReader<'a> {
 		let size = self.read_u32()? as usize;
 		read_buf(self.stream, size)
 	}
-	
+
+	//buffer will need to change type.... 
+	pub fn read_buf_pmem(&mut self) -> Result<BufferPMEM, StreamError> {
+		let size = self.read_u32()? as usize;
+		read_buf_pmem(self.stream, size)
+	}
+
 
 	pub fn read_string(&mut self) -> Result<String, StreamError> {
 		let size = self.read_u32()? as usize;

@@ -6,12 +6,13 @@
  */
 
 
+#![feature(allocator_api)]
 
-#![cfg_attr(feature = "allocator_api", feature(allocator_api))]
+//#![cfg_attr(feature = "allocator_api", feature(allocator_api))]
 
-#[cfg(feature = "allocator_api")]
+//#[cfg(feature = "allocator_api")]
 pub mod allocator;
-#[cfg(feature = "allocator_api")]
+//#[cfg(feature = "allocator_api")]
 pub use crate::allocator::HybridBuffer;
 
 pub mod stream;
