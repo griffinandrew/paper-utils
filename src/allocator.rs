@@ -45,13 +45,12 @@ unsafe impl GlobalAlloc for HybridGlobal {
                 #[cfg(debug_assertions)] {println!("Initialized PMEM allocator with DAX path /dev/dax0.0 and size {}", dax_size);}
                 });
             }
-            // Default DRAM limit of 100 GiB
             let ptr = allocator_bindings::umf_alloc(layout.size(), layout.align()) as *mut u8;
             if ptr.is_null() { eprintln!("Failed to allocate PMEM in paper utils"); return ptr::null_mut(); }
 
-            //println!("SERVER: allocated size (align): {}", layout.align());
-            //println!("SERVER: allocated size (size): {}", layout.size());
-            //println!("SERVER: allocated ptr: {:p}", ptr);
+            println!("SERVER: allocated size (align): {}", layout.align());
+            println!("SERVER: allocated size (size): {}", layout.size());
+            println!("SERVER: allocated ptr: {:p}", ptr);
 
             return ptr;
         }
