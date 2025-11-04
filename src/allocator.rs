@@ -37,7 +37,7 @@ unsafe impl GlobalAlloc for HybridGlobal {
             unsafe {
                 INIT.call_once(|| {
                     let dax_size = 118377938944; // PMEM size from ndctl list --namespaces
-                    let dax_path = b"/dev/dax0.1\0".as_ptr() as *const i8; // PMEM path from ndctl list --namespaces
+                    let dax_path = b"/dev/dax0.0\0".as_ptr() as *const i8; // PMEM path from ndctl list --namespaces
                     allocator_bindings::umf_allocator_init(
                         dax_path,
                         dax_size,
@@ -74,7 +74,7 @@ unsafe impl GlobalAlloc for HybridGlobal {
             unsafe {
                 INIT.call_once(|| {
                     let dax_size = 118377938944; // PMEM size from ndctl list --namespaces
-                    let dax_path = b"/dev/dax0.1\0".as_ptr() as *const i8; // PMEM path from ndctl list --namespaces
+                    let dax_path = b"/dev/dax0.0\0".as_ptr() as *const i8; // PMEM path from ndctl list --namespaces
                     allocator_bindings::umf_allocator_init(
                         dax_path,
                         dax_size,
