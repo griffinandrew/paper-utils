@@ -14,7 +14,6 @@
 pub mod allocator;
 //#[cfg(feature = "allocator_api")]
 
-   
 
 pub use crate::allocator::HybridGlobal;
 

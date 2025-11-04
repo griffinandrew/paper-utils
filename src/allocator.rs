@@ -47,7 +47,7 @@ unsafe impl GlobalAlloc for HybridGlobal {
             }
             // Default DRAM limit of 100 GiB
             let ptr = allocator_bindings::umf_alloc(layout.size(), layout.align()) as *mut u8;
-            if ptr.is_null() { eprintln!("Failed to allocate PMEM"); return ptr::null_mut(); }
+            if ptr.is_null() { eprintln!("Failed to allocate PMEM in paper utils"); return ptr::null_mut(); }
 
             //println!("SERVER: allocated size (align): {}", layout.align());
             //println!("SERVER: allocated size (size): {}", layout.size());
@@ -58,7 +58,7 @@ unsafe impl GlobalAlloc for HybridGlobal {
 
         if DRAM_LIMIT == 1000 * 1024 * 1024 * 1024 {
             let ptr = Jemalloc.alloc(layout);
-            if ptr.is_null() { eprintln!("Failed to allocate DRAM"); return ptr::null_mut(); }
+            if ptr.is_null() { eprintln!("Failed to allocate DRAM in paper utils"); return ptr::null_mut(); }
             return ptr;
         }
 
@@ -66,7 +66,7 @@ unsafe impl GlobalAlloc for HybridGlobal {
         // Decide backend
         let raw = if Self::should_use_dram(layout.size()) {
             let ptr = Jemalloc.alloc(layout);
-            if ptr.is_null() { eprintln!("Failed to allocate DRAM"); return ptr::null_mut(); }
+            if ptr.is_null() { eprintln!("Failed to allocate DRAM in paper utils"); return ptr::null_mut(); }
             DRAM_ALLOCATED.fetch_add(layout.size(), Ordering::SeqCst);
             #[cfg(debug_assertions)] {ALL_MEM_ALLOCATED.fetch_add(layout.size(), Ordering::SeqCst);}
             ptr
