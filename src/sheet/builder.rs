@@ -176,6 +176,16 @@ impl<'a> Sheet<'a> {
             payload: Some(SheetData::Owned(payload)),
         }
     }
+	pub fn write_to<W: std::io::Write>(&self, w: &mut W) -> std::io::Result<()> {
+        w.write_all(&self.header)?;
+        if let Some(payload) = &self.payload {
+            match payload {
+                SheetData::Owned(b) => w.write_all(b)?,
+                SheetData::Borrowed(s) => w.write_all(s)?,
+            }
+        }
+        Ok(())
+    }
 }
 
 pub struct SheetBuilder<'a> {
@@ -252,15 +262,17 @@ impl<'a> SheetBuilder<'a> {
 		Sheet::new(self.data.into_boxed_slice())
 	}
 
+	#[cfg(feature = "allocator_api")]
+    pub fn into_sheet_borrowed(self, payload: &'a [u8]) -> Sheet<'a> {
+        Sheet::with_borrowed_payload(self.data.into_boxed_slice(), payload)
+    }
+
 
 	#[cfg(feature = "allocator_api")]
-    /// Convert the builder into a Sheet
-    pub fn into_sheet(self) -> Sheet<'a> {
-        match self.borrowed_payload {
-            Some(payload) => Sheet::with_borrowed_payload(self.data.into_boxed_slice(), payload),
-            None => Sheet::new(self.data.into_boxed_slice()),
-        }
+    pub fn into_sheet_owned(self) -> Sheet<'static> {
+        Sheet::with_owned_payload(self.data.into_boxed_slice(), Box::new([]))
     }
+
 }
 
 impl<'a> Default for SheetBuilder<'a> {
