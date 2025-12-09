@@ -53,12 +53,25 @@ pub fn read_buf(stream: &mut TcpStream, buf_size: usize) -> Result<Buffer, Strea
 pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPMEM, StreamError> {
 	//let mut buf = vec![0u8; buf_size].into_boxed_slice();
 
-	let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
-    buf.resize(buf_size, 0); // initialize with zeros
+
+	//new_uninit_slice_in
+	//pub fn new_zeroed_slice_in(len: usize, alloc: A) -> Box<[MaybeUninit<T>], A>
+
+	//let mut buf : Box<[MaybeUninit<BufferPMEM>], HybridGlobal> = Box::new_uninit_slice_in(buf_size, HybridGlobal);
+
+	//pub fn into_boxed_slice(boxed: Box<T, A>) -> Box<[T], A>
+
+
+	//let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
+    //buf.resize(buf_size, 0); // initialize with zeros
 	
 	//i think this moves it back to a dram allocated buffer....
 	//no i think im worng as no error when building....
-	let mut buf = buf.into_boxed_slice();
+	let mut buf: Box<[u8], HybridGlobal>  = (Vec::with_capacity_in(buf_size, HybridGlobal)).into_boxed_slice();
+
+	//let mut buf = buf.into_boxed_slice();
+
+	//let buf = 
 
 	match stream.read_exact(&mut buf) {
 		Ok(_) => Ok(buf),
