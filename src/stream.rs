@@ -63,15 +63,12 @@ pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPM
 
 
 	//let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
-    //buf.resize(buf_size, 0); // initialize with zeros
 	
 	//i think this moves it back to a dram allocated buffer....
 	//no i think im worng as no error when building....
 	let mut buf: Box<[u8], HybridGlobal>  = (Vec::with_capacity_in(buf_size, HybridGlobal)).into_boxed_slice();
 
 	//let mut buf = buf.into_boxed_slice();
-
-	//let buf = 
 
 	match stream.read_exact(&mut buf) {
 		Ok(_) => Ok(buf),
