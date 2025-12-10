@@ -15,7 +15,7 @@ use std::{
 
 
 
-use std::mem::MaybeUninit;
+use core::iter;
 
 
 //#[cfg(feature = "allocator_api")]
@@ -63,16 +63,21 @@ pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPM
 
 
 	//let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
-	
-	//i think this moves it back to a dram allocated buffer....
-	//no i think im worng as no error when building....
+
+
 	//let mut buf: Box<[u8], HybridGlobal>  = (Vec::with_capacity_in(buf_size, HybridGlobal)).into_boxed_slice();
 
-	let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
 
-	buf.resize(buf_size, 0);
+	let buf: Box<[u8], HybridGlobal> = iter::repeat(0)
+		.take(buf_size)
+		.collect_in(HybridGlobal);
 
-	let mut buf =  buf.into_boxed_slice();
+
+	//let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
+
+	//buf.resize(buf_size, 0);
+
+	//let mut buf =  buf.into_boxed_slice();
 
 	//let mut buf = buf.into_boxed_slice();
 
