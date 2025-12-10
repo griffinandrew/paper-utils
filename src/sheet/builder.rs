@@ -75,12 +75,6 @@ impl SheetBuilder {
 		self.write_buf(value.as_ref().as_bytes())
 	}
 
-	#[cfg(not(feature = "allocator_api"))]
-	pub fn into_sheet(self) -> Sheet {
-		Sheet::new(self.data.into_boxed_slice())
-	}
-
-	#[cfg(feature = "allocator_api")]
 	pub fn into_sheet(self) -> Sheet {
 		Sheet::new(self.data.into_boxed_slice())
 	}
