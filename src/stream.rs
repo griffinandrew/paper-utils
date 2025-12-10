@@ -70,9 +70,12 @@ pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPM
 
 	let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
 
+	buf.resize(buf_size, 0);
+
 	let mut buf =  buf.into_boxed_slice();
 
 	//let mut buf = buf.into_boxed_slice();
+
 
 	match stream.read_exact(&mut buf) {
 		Ok(_) => Ok(buf),
