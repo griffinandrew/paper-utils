@@ -68,18 +68,13 @@ pub fn read_buf_pmem(stream: &mut TcpStream, buf_size: usize) -> Result<BufferPM
 	//let mut buf: Box<[u8], HybridGlobal>  = (Vec::with_capacity_in(buf_size, HybridGlobal)).into_boxed_slice();
 
 
-	let buf: Box<[u8], HybridGlobal> = iter::repeat(0)
-		.take(buf_size)
-		.collect_in(HybridGlobal);
+	let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
 
-
-	//let mut buf: Vec<u8, HybridGlobal> = Vec::with_capacity_in(buf_size, HybridGlobal);
-
-	//buf.resize(buf_size, 0);
+	buf.resize(buf_size, 0);
 
 	//let mut buf =  buf.into_boxed_slice();
 
-	//let mut buf = buf.into_boxed_slice();
+	let mut buf = buf.into_boxed_slice();
 
 
 	match stream.read_exact(&mut buf) {
